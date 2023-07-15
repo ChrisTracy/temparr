@@ -1,4 +1,6 @@
-# temparr
+# Temparr
+
+This project comes as a pre-built docker image that enables you to remove movies from Radarr after a specified number of days. It works based on a root folder that you specify.
 
 ## Quick Setup
 
@@ -18,11 +20,11 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - HOST_URL=<host_url>
-      - API_KEY=<api_key>
-      - TEMPORARY_FOLDER=<temporary_folder>
-      - KEEP_TIME=<keep_time>
-      - RECURRENCE=<recurrence>
+      - HOST_URL=<radarr_url>
+      - API_KEY=<radarr_api_key>
+      - TEMPORARY_FOLDER=<radarr_root_folder>
+      - KEEP_TIME=<keep_time_in_days>
+      - RECURRENCE=<recurrence_in_minutes>
     restart: unless-stopped
 ```
 
