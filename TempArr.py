@@ -39,6 +39,8 @@ api_key = os.environ.get('API_KEY')
 temporary_folder = os.environ.get('TEMPORARY_FOLDER')
 keep_time = os.environ.get('KEEP_TIME')
 recurrence = int(os.environ.get('RECURRENCE'))
+max_attempts = 3
+retry_interval = 30  # in seconds
 
 #add slash to tempfolder if it does not exist
 if "/" not in temporary_folder:
@@ -51,11 +53,19 @@ logging.info(f"Converting keep_time to seconds. Data will be deleted {keep_time}
 
 # Instantiate RadarrAPI object
 logging.info("Connecting to Radarr")
-try:
-    radarr = RadarrAPI(host_url, api_key)
-except:
-    logging.error("Not able to connect to Radarr!")
-    exit()
+for attempt in range(1, max_attempts + 1):
+    try:
+        radarr = RadarrAPI(host_url, api_key)
+        logging.info("Connected to Radarr successfully!")
+        break  # Connection successful, exit the loop
+    except Exception as e:
+        logging.error("Attempt %d: Unable to connect to Radarr - %s", attempt, e)
+        if attempt < max_attempts:
+            logging.info("Retrying in %d seconds...", retry_interval)
+            time.sleep(retry_interval)
+        else:
+            logging.error("All connection attempts failed. Exiting...")
+            exit()
 
 #check if the root folder exists
 logging.info("Ensuring root folder exists")
