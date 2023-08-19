@@ -56,6 +56,7 @@ logging.info("Connecting to Radarr")
 for attempt in range(1, max_attempts + 1):
     try:
         radarr = RadarrAPI(host_url, api_key)
+        radarr.get_health()
         logging.info("Connected to Radarr successfully!")
         break  # Connection successful, exit the loop
     except Exception as e:
